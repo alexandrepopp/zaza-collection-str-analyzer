@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "// Phase 2: Uncomment and configure these as you add data sources": "",
+
+    "// zillow": {
+      "// command": "node",
+      "// args": ["./mcp-servers/zillow-server.js"],
+      "// env": {
+        "// RAPIDAPI_KEY": "your-key-here"
+      }
+    },
+
+    "// airdna": {
+      "// command": "node",
+      "// args": ["./mcp-servers/airdna-server.js"],
+      "// env": {
+        "// AIRDNA_API_KEY": "your-key-here"
+      }
+    }
+  }
+}

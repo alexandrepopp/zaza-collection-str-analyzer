@@ -1,0 +1,108 @@
+# STR Investment Underwriting Assumptions
+# Adjust these to match your investment criteria and market conditions
+
+# ─── Revenue Defaults (used when market data unavailable) ────────────────────
+revenue_defaults:
+  adr_by_bedrooms:
+    3: 200
+    4: 275
+    5: 350
+    6: 425
+    7: 500
+    8: 600
+  occupancy_by_bedrooms:
+    3: 0.65
+    4: 0.65
+    5: 0.62
+    6: 0.60
+    7: 0.58
+    8: 0.55
+  seasonality:
+    peak_months: [6, 7, 10, 12]
+    peak_multiplier: 1.35
+    shoulder_months: [3, 4, 5, 8, 9, 11]
+    shoulder_multiplier: 1.0
+    off_peak_months: [1, 2]
+    off_peak_multiplier: 0.70
+
+# ─── Operating Expenses (as % of gross revenue unless noted) ─────────────────
+expenses:
+  platform_fees: 0.03
+  property_management: 0.20
+  cleaning_per_turn:                # per turnover, by bedroom count
+    6: 400
+    7: 450
+    8: 550                          # 8+ bedrooms
+  avg_stay_nights: 3.5
+  supplies_by_bedrooms:             # annual, fixed amount by bedroom count
+    6: 500
+    7: 700
+    8: 800                          # 8+ bedrooms
+  utilities_monthly: 500
+  insurance_annual: 3000
+  property_tax_rate: "from_listing"  # always sourced from Zillow listing; no default fallback
+  maintenance_by_bedrooms:          # annual, fixed amount by bedroom count
+    6: 500
+    7: 700
+    8: 800                          # 8+ bedrooms
+  lawn_snow_monthly: 150
+  pest_control_annual: 150
+  hot_tub_pool_monthly: 200
+  permits_licenses_annual: 0
+  software_monthly: 150
+  mortgage_insurance_annual_pct: 0.005  # 0.5% of loan value
+
+# ─── Holding Cost Reserve (3-month carry before property goes live) ───────────
+# These are fixed ownership costs charged during vacancy — not guest-facing.
+# Internet, water, electricity, and natural gas are set here; pest control,
+# pool, landscaping, insurance, property tax, and mortgage pull from above.
+holding_costs:
+  months: 3
+  internet_monthly: 100
+  water_monthly: 100
+  electricity_monthly: 200
+  natural_gas_monthly: 100
+  garbage_monthly: 75
+
+# ─── Tax Assumptions ─────────────────────────────────────────────────────────
+tax:
+  federal_marginal_rate: 0.37
+  # state_marginal_rate excluded — California does not allow STR losses to offset state income
+  cost_seg:
+    land_value_pct: 0.20
+    personal_property_pct: 0.25
+    land_improvements_pct: 0.15
+    building_pct: 0.40
+  bonus_depreciation_rate: 0.40   # 2025 rate (phase-down: 2024=60%, 2025=40%, 2026=20%)
+  ca_conforms_to_bonus_depr: false
+  depreciation_recapture_rate: 0.25
+  str_subject_to_se_tax: false
+
+# ─── Return Thresholds ───────────────────────────────────────────────────────
+thresholds:
+  cash_on_cash:
+    strong_buy: 0.10
+    buy: 0.08
+    hold: 0.06
+    pass: 0.05        # Below this = pass
+  gross_yield:
+    target: 0.12
+    minimum: 0.08
+
+# ─── Hold Strategy & Projection Assumptions ──────────────────────────────────
+# Investment thesis: hold indefinitely — no planned exit or sale.
+# Total return is the sum of all holding benefits over the projection period.
+projections:
+  hold_forever: true                # no sale assumed; exit metrics (cap rate, selling costs) not used
+  holding_period_years: 10          # projection window for return summary
+  annual_appreciation: 0.025
+  annual_revenue_growth: 0.00
+  annual_expense_growth: 0.00
+
+  # Total return components (all accumulated over holding_period_years):
+  total_return_components:
+    cash_flow: true                 # net cash flow after debt service
+    year1_bonus_depreciation: true  # one-time Year 1 federal bonus depreciation deduction (cost seg)
+    long_term_depreciation: true    # annual straight-line deduction: (total cost basis - land value) / 39
+    appreciation: true              # property value growth at 2.5% annually
+    mortgage_paydown: true          # principal reduction = equity buildup each year

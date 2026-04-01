@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# macOS
+.DS_Store
+
+# Memos / generated outputs (personal deal analysis — not committed)
+memos/
+
+# Sensitive config (add your own .env or secrets here)
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
+
+# Cowork session files
+.claude/
