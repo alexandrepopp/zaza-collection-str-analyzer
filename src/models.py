@@ -113,13 +113,11 @@ class HoldingCosts(BaseModel):
     """
     months: int = 3
     internet: float
-    water: float
-    electricity: float
-    natural_gas: float
+    utilities: float          # combined water + electricity + natural gas (bedroom-keyed)
+    garbage: float
     pest_control: float
     pool_maintenance: float
     landscaping: float
-    garbage_supplies: float
     property_taxes: float
     home_insurance: float
     mortgage: float

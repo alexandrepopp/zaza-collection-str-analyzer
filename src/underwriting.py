@@ -525,31 +525,34 @@ def calculate_holding_costs(
     hc = get_holding_costs_config(config)
     exp = get_expense_config(config)
     months = int(hc.get("months", 3))
+    beds = listing.bedrooms
 
     # ── Utilities (from holding_costs config) ─────────────────────────────
-    internet    = hc["internet_monthly"]    * months
-    water       = hc["water_monthly"]       * months
-    electricity = hc["electricity_monthly"] * months
-    natural_gas = hc["natural_gas_monthly"] * months
-    garbage     = hc["garbage_monthly"]     * months
+    internet = hc["internet_monthly"] * months
+    garbage  = hc["garbage_monthly"]  * months
+
+    # Combined water + electricity + natural gas, keyed by bedroom count
+    utility_by_beds = hc["utility_monthly_by_bedrooms"]
+    utility_monthly = _lookup_by_bedrooms(utility_by_beds, beds)
+    utilities = utility_monthly * months
 
     # ── Fixed recurring ownership costs (from expenses config) ────────────
-    pest_control    = (exp["pest_control_annual"] / 12)      * months
-    pool_maint      = exp["hot_tub_pool_monthly"]            * months
-    landscaping     = exp["lawn_snow_monthly"]               * months
+    pest_control = (exp["pest_control_annual"] / 12) * months
+    pool_maint   = exp["hot_tub_pool_monthly"]       * months
+    landscaping  = exp["lawn_snow_monthly"]           * months
 
     # ── Property-level costs ──────────────────────────────────────────────
     # Property tax: use listing value if available, else 1% default
     annual_tax = listing.property_tax_annual or (listing.price * 0.01)
-    property_taxes  = (annual_tax / 12) * months
+    property_taxes = (annual_tax / 12) * months
 
-    home_insurance  = (exp["insurance_annual"] / 12) * months
+    home_insurance = (exp["insurance_annual"] / 12) * months
 
     # ── Mortgage (P&I + MI already rolled into annual_debt_service) ───────
     mortgage = (financing.annual_debt_service / 12) * months
 
     total = (
-        internet + water + electricity + natural_gas + garbage
+        internet + utilities + garbage
         + pest_control + pool_maint + landscaping
         + property_taxes + home_insurance + mortgage
     )
@@ -557,13 +560,11 @@ def calculate_holding_costs(
     return HoldingCosts(
         months=months,
         internet=round(internet, 2),
-        water=round(water, 2),
-        electricity=round(electricity, 2),
-        natural_gas=round(natural_gas, 2),
+        utilities=round(utilities, 2),
+        garbage=round(garbage, 2),
         pest_control=round(pest_control, 2),
         pool_maintenance=round(pool_maint, 2),
         landscaping=round(landscaping, 2),
-        garbage_supplies=round(garbage, 2),
         property_taxes=round(property_taxes, 2),
         home_insurance=round(home_insurance, 2),
         mortgage=round(mortgage, 2),

@@ -54,15 +54,20 @@ expenses:
 
 # ─── Holding Cost Reserve (3-month carry before property goes live) ───────────
 # These are fixed ownership costs charged during vacancy — not guest-facing.
-# Internet, water, electricity, and natural gas are set here; pest control,
-# pool, landscaping, insurance, property tax, and mortgage pull from above.
+# Utilities (water + electricity + natural gas) are scaled by bedroom count.
+# Internet and garbage are flat; pest control, pool, landscaping, insurance,
+# property tax, and mortgage pull from above.
 holding_costs:
   months: 3
   internet_monthly: 100
-  water_monthly: 100
-  electricity_monthly: 200
-  natural_gas_monthly: 100
   garbage_monthly: 75
+  utility_monthly_by_bedrooms:  # water + electricity + natural gas combined
+    3: 300
+    4: 400
+    5: 500
+    6: 700
+    7: 800
+    8: 900                      # 8+ bedrooms
 
 # ─── Tax Assumptions ─────────────────────────────────────────────────────────
 tax:
